@@ -34,7 +34,7 @@ class FayoumBananaDataModule(FileListDataModule):
     normalize_values = ((0.6237, 0.6076, 0.5367), (0.1759, 0.1925, 0.3011))
 
     def __init__(self, batch_size, image_resolution=(536, 960), y_labels="ripeness",
-                 data_dir="./data/Fayoum_Banana",
+                 data_dir="./datasets/data/Fayoum_Banana",
                  normalize=True, norm_orientation=False, augment="default", **kwargs):
 
         if y_labels is None:

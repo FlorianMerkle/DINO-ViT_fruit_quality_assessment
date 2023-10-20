@@ -8,7 +8,7 @@ from sklearn.metrics import precision_recall_fscore_support
 from xgboost import XGBClassifier
 
 from dino_experiments.util import get_seeded_data_loader, get_embeddings, Logger, AVAILABLE_DATASETS
-from exp_01_best_clf import XGBOOST_PARAMS
+from dino_experiments.exp_01_best_clf import XGBOOST_PARAMS
 
 warnings.filterwarnings("ignore", category=UserWarning)
 

@@ -1,4 +1,4 @@
-from train_cnn import main as train_script
+from baseline_experiments.train_cnn import main as train_script
 
 
 class ArgNamespace(object):
