@@ -18,7 +18,7 @@ from dino_experiments.util import get_embeddings, get_seeded_data_loader, Logger
 warnings.filterwarnings("ignore", category=UserWarning)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-BATCH_SIZE = 16
+BATCH_SIZE = 4
 N_RANDOM_RUNS = 5
 TEST_SAMPLE_SIZE = VAL_SAMPLE_SIZE = -1
 N_JOBS = -1

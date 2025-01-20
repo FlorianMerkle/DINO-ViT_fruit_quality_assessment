@@ -5,7 +5,7 @@ from dino_experiments.exp_04_dim_reduction import main as experiment_4
 from baseline_experiments.exp_05_train_baseline_models import fayoum as experiment_05_fayoum, \
                                                               casc_ifw_binary as experiment_05_cascifw
 
-RUN_BASELINE = False
+RUN_BASELINE = True
 
 if __name__ == '__main__':
 
@@ -15,8 +15,8 @@ if __name__ == '__main__':
     # - combine pretrained DINO ViT with different shallow classifiers
     # - run GridSearch on each to find the best combination
     # - Paper reference: Table 1(c), 1(d)
-    experiment_1("fayoum")
-    experiment_1("cascifw")
+    #experiment_1("fayoum")
+    '''experiment_1("cascifw")
 
     # Experiment 2:
     # - take best combinations from experiment 1 and refit with reduced training data sizes
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     # - Paper reference: Fig. 4 and Fig. 5
     experiment_4("fayoum", subfolder="fayoum/")
     experiment_4("fayoum", subfolder="fayoum_oriented/", norm_orient=True)
-    experiment_4("cascifw", subfolder="cascifw/")
+    experiment_4("cascifw", subfolder="cascifw/")'''
 
     if RUN_BASELINE:
         # run baseline experiments (CNN training)
@@ -43,4 +43,4 @@ if __name__ == '__main__':
 
         # Paper reference: Table 1(a), 1(b), and Fig. 3
         experiment_05_fayoum()
-        experiment_05_cascifw()
+        #experiment_05_cascifw()

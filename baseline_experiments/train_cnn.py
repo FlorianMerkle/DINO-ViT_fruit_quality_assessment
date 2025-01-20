@@ -35,8 +35,8 @@ def train(model, data_module, optimizer, scheduler, logger, ckpt_dir, num_epochs
 
     ckpt_path = os.path.join(ckpt_dir, "checkpoint.pt")
     metrics = {
-        "train": {"accuracy": torch_metrics.Accuracy().to(device)},
-        "val": {"accuracy": torch_metrics.Accuracy().to(device)}
+        "train": {"accuracy": torch_metrics.Accuracy(task='multiclass', num_classes=4).to(device)},
+        "val": {"accuracy": torch_metrics.Accuracy(task='multiclass', num_classes=4).to(device)}
     }
 
     assert early_stopping_metric == "loss" or early_stopping_metric in metrics["val"].keys()
@@ -44,8 +44,9 @@ def train(model, data_module, optimizer, scheduler, logger, ckpt_dir, num_epochs
     best_val_loss = np.inf
     best_early_stop_metric = 0.0
     early_stopping_count = 0
+    
     for epoch in tqdm(range(num_epochs)):
-
+        
         for phase in ['train', 'val']:
             dataloader = data_module[phase]
 
@@ -54,7 +55,6 @@ def train(model, data_module, optimizer, scheduler, logger, ckpt_dir, num_epochs
             running_loss = 0.0
             # Iterate over data.
             for i, (inputs, labels) in enumerate(dataloader):
-
                 if phase == "train" and i == n_train_batches:
                     break
 
@@ -122,7 +122,7 @@ def train(model, data_module, optimizer, scheduler, logger, ckpt_dir, num_epochs
 @torch.no_grad()
 def test(model, data_module, logger):
     n_classes = data_module.n_classes
-    metrics = {"accuracy": torch_metrics.Accuracy().to(device),
+    metrics = {"accuracy": torch_metrics.Accuracy(task='multiclass', num_classes=4).to(device).to(device),
                "precision": torch_metrics.Precision(average=None, num_classes=n_classes).to(device),
                "recall": torch_metrics.Recall(average=None, num_classes=n_classes).to(device),
                "f1": torch_metrics.F1(average=None, num_classes=n_classes).to(device)
@@ -194,8 +194,8 @@ def main(args):
 
         def __getitem__(self, item):
             assert item in ["train", "val", "test"]
-            return get_seeded_data_loader(args.dataset, item, args.seed, image_res=self.img_res,
-                                          batch_size=batch_size, use_sampler=self.use_sampler)
+            return get_seeded_data_loader(args.dataset, item, args.seed, #image_resolution=self.img_res,
+                                          batch_size=batch_size, )#use_sampler=self.use_sampler)
 
     # Initialize model
     train_conv = args.mode == "all"
@@ -217,7 +217,6 @@ def main(args):
                                                      patience=args.scheduler_patience,
                                                      verbose=True
                                                      )
-
     # Initialize wandb logger
     wandb.init(project=args.project,
                group=args.group,
@@ -225,7 +224,6 @@ def main(args):
                mode="offline" if args.offline is True else "online",
                config=args)
     wandb.watch(model, log_freq=100)  # log gradients
-
     ckpt_dir = "checkpoints/" + args.name + "_" + datetime.datetime.now().strftime("%Y_%m_%d_%H_%M")
     os.makedirs(ckpt_dir, exist_ok=True)
     # regular training
@@ -233,7 +231,7 @@ def main(args):
     model = train(model, dm, optimizer, scheduler, logger=wandb, ckpt_dir=ckpt_dir, num_epochs=args.n_epochs,
                   class_weighting=args.class_weight, early_stopping_metric=args.es_metric,
                   early_stopping_patience=args.es_patience, n_train_batches=args.n_train_samples//batch_size)
-
+    print()
     # finetuning
     if args.mode == "finetune":
         print("start finetuning")
@@ -266,7 +264,7 @@ if __name__ == '__main__':
     # dataset args
     parser.add_argument('--dataset', default="casc_ifw", choices=AVAILABLE_DATASETS.keys())
     parser.add_argument('--y_labels', default=None, type=str, help="Dataset specific label definition, if applicable.")
-    parser.add_argument('--batch_size', default=128, type=int, help='Batch size per GPU')
+    parser.add_argument('--batch_size', default=32, type=int, help='Batch size per GPU')
     # model args
     parser.add_argument('--model', default="resnet50", type=str, help='Name of pretrained model')
     parser.add_argument('--mode', default="all", choices=["all", "clf", "finetune"],

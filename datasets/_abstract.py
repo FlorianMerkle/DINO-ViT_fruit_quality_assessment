@@ -156,6 +156,7 @@ class FileListDataModule(DataModule):
             self.background_transform = None
 
         if normalize:
+            print('normalize values', self.normalize_values)
             self.normalize_transform = transforms.Normalize(*(self.normalize_values or IMAGENET_NORMALIZE_VALUES))
         else:
             self.normalize_transform = None

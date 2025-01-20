@@ -39,12 +39,12 @@ def casc_ifw_binary():
     args = ArgNamespace(default_args)
 
     seeds = list(range(5))
-    modes = ["all", "clf"]
+    modes = ["clf"]
 
     # models = ["resnet18", "resnet50", "resnet101", "resnet152", "alexnet", "densenet", "squeezenet", "alexnet", "vgg"]
     # n_trains = [-1]
 
-    models = ["squeezenet", "vgg"]
+    models = ["alexnet"]
     n_trains = [100, 200, 500, 1000, 2000]
 
     for seed in seeds:
@@ -58,26 +58,28 @@ def casc_ifw_binary():
                     _n = f"{model}_n={'all'if n_train == -1 else n_train}_{mode}"
                     args.group = _n
                     args.name = _n
+                    train_script(args)
                     try:
                         train_script(args)
-                    except:
+                    except Exception as error:
                         print(f"Training model {model} failed.")
+                        print(error)
                         exit(1)
 
 def fayoum():
     default_args = {
         "project": "dino_baseline_fayoum_reduced_samples",
         "group": None,  # set
-        "name": "",  # set
+        "name": "clf",  # set
         "offline": False,
         "no_wandb": True,
 
         "dataset": "fayoum",
         "y_labels": "ripeness",
-        "batch_size": 100,
+        "batch_size": 48,
 
         "model": None,  # set
-        "mode": None,  # set all and clf
+        "mode": "clf",  # set all and clf
         "no_pretrain": False,
 
         "class_weight": False,
@@ -88,23 +90,21 @@ def fayoum():
         "scheduler_patience": 15,
 
         "seed": None,  # set
-        "gpu_ids": [0, 1],
+        "gpu_ids": [0],
         "n_epochs": 5000,
         "n_train_samples": None  # set
     }
-
     args = ArgNamespace(default_args)
-
-    seeds = list(range(10))
-    modes = ["all", "clf"]
-
-    models = ["resnet50", "alexnet"]
-    n_trains = [4, 8, 20, 40, 120, -1]
+    seeds = list(range(1))
+    modes = ["all"]
+    models = ["alexnet"]
+    n_trains = [-1]
 
     for seed in seeds:
         for mode in modes:
             for n_train in n_trains:
                 for model in models:
+
                     args.mode = mode
                     args.seed = seed
                     args.n_train_samples = n_train
@@ -112,14 +112,18 @@ def fayoum():
                     _n = f"{model}_n={'all'if n_train == -1 else n_train}_{mode}"
                     args.group = _n
                     args.name = _n
+                    #train_script(args)
                     try:
+                        
                         train_script(args)
-                    except:
+                        
+                    except Exception as e:
                         print(f"Training model {model} failed.")
+                        print(e)
                         exit(1)
 
 
 if __name__ == '__main__':
     fayoum()
-    casc_ifw_binary()
+#    casc_ifw_binary()
 

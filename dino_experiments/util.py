@@ -15,7 +15,7 @@ AVAILABLE_DATASETS = {
 }
 
 
-def get_seeded_data_loader(dataset, subset, seed, batch_size=100, resize=True, mode="train_val_test",
+def get_seeded_data_loader(dataset, subset, seed, batch_size=100, resize=True, normalize=True, mode="train_val_test",
                            y_labels=None, **kwargs):
     assert dataset in AVAILABLE_DATASETS.keys()
     assert subset in ["train", "val", "test"]
@@ -26,7 +26,7 @@ def get_seeded_data_loader(dataset, subset, seed, batch_size=100, resize=True, m
         sampler = "roundrobin"
     else:
         sampler = "random"
-    return AVAILABLE_DATASETS[dataset](batch_size=batch_size, image_resolution=img_res, normalize=True,
+    return AVAILABLE_DATASETS[dataset](batch_size=batch_size, image_resolution=img_res, normalize=normalize,
                                        sampler=sampler, sampler_seed=seed, mode=mode, y_labels=y_labels,
                                        **kwargs)[subset]
 

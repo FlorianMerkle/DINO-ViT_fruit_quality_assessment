@@ -22,4 +22,8 @@ venv.bak/
 .idea
 
 datasets/data/*
-results
+testing.ipynb
+
+*wandb*
+*.pkl
+*checkpoint*
