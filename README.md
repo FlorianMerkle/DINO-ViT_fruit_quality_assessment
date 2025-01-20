@@ -1,8 +1,10 @@
 # Adversarial Attacks on the DINO-ViT Fruit Quality Assessment Model
 
-This fork contains the required changes to conduct an assessment of the adversarial robustness of the models. 
+This fork contains the required changes to assess the adversarial robustness of the models. 
 
-As the original work employs a 2-step approach comprised of a pre-trained PyTorch vision transformer for feature extractor and a scikit-learn linear classifier, I build an identical end-to-end PyTorch model to craft adverasrial examples with the [Foolbox](https://github.com/bethgelab/foolbox) library. The adversarial examples are then evaluated against the surrogate and the original model.
+As the original work employs a 2-step approach comprised of a pre-trained PyTorch vision transformer for feature extractor and a scikit-learn linear classifier, I build an identical end-to-end PyTorch model to craft adversarial examples with the [Foolbox](https://github.com/bethgelab/foolbox) library. The adversarial examples are then evaluated against the surrogate and the original model.
+
+I had to adapt the existing code in some places, the script for attacking the model and the results can be found in the `adversarial_attacks` folder.
 
 The results of this study were presented at the [Twenty-third International Working Seminar on Production Economics 2024](https://www.uibk.ac.at/wipl/productioneconomics2024/), and are currently under review for a journal publication.
 
